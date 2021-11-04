@@ -14,21 +14,22 @@ static void pathfinder_cleanup(t_graph** graph, t_list_node** nodes) {
 }
 
 // Save all needed file info and initiate the Dijkstra's algorithm
-static void pathfinder_init(const char* file_name, t_graph** graph) {
+static void pathfinder_init(const char* file_name) {
 
     int size = 0;
     char** file_lines = NULL;
+    t_graph* graph = NULL;
 
     mx_get_file_util(file_name, &file_lines, &size);
-    *graph = mx_create_graph(size);
+    graph = mx_create_graph(size);
     
-    t_list_node** nodes = mx_parse_file_lines(*graph, file_lines);
+    t_list_node** nodes = mx_parse_file_lines(graph, file_lines);
     for (int i = 0; i < size; ++i) {
 
-        mx_dijkstra(*graph, nodes, nodes[i]);
+        mx_dijkstra(graph, nodes, nodes[i]);
 
     }
-    pathfinder_cleanup(graph, nodes);
+    pathfinder_cleanup(&graph, nodes);
 
 }
 
@@ -36,8 +37,7 @@ int main(int argc, char* argv[]) {
 
     mx_handle_errors(argv, argc);
 
-    t_graph* graph = NULL;
-    pathfinder_init(argv[1], &graph);
+    pathfinder_init(argv[1]);
     
     return 0;
 
